@@ -20,7 +20,6 @@
       background-color: #f8f9fa;
       display: flex;
       justify-content: center;
-      /* align-items: center; */
     }
 
     .layout-container {
@@ -32,9 +31,7 @@
 
     .form-container {
       flex: 1;
-      /* ให้ขยายเต็มพื้นที่ฝั่งซ้าย */
       max-width: 40%;
-      /* กำหนดขนาดสูงสุด */
     }
 
     .form-container form {
@@ -87,18 +84,12 @@
     .price-card-container {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      /* แสดงการ์ดใน 3 คอลัมน์ */
       gap: 16px;
-      width: 100%;      
+      width: 100%;
       background: #f8f9fa;
-      /* เพิ่มพื้นหลัง */
       border: 1px solid #ddd;
-      /* เส้นขอบ */
       border-radius: 5px;
-      /* มุมโค้งมน */
     }
-
-
 
     .price-card {
       overflow: hidden;
@@ -136,61 +127,73 @@
       padding: 10px 20px;
       border-radius: 5px;
     }
+
+    .price-card .card-number {
+      font-family: Arial, sans-serif;
+      position: absolute;
+      bottom: 10px;
+      left: 5%;
+      color: #333;
+      font-size: 18px;
+      font-weight: bold;
+    }
   </style>
 </head>
 
 <body>
+  <div class="layout-container">
+    <!-- Left Side -->
+    <div class="form-container">
+      <form id="priceForm">
+        <label for="normalPriceInput">Normal Price:</label>
+        <input type="number" id="normalPriceInput" placeholder="Enter normal price" required />
 
-  <body>
-    <div class="layout-container">
-      <!-- Left Side -->
-      <div class="form-container">
-        <form id="priceForm">
-          <label for="normalPriceInput">Normal Price:</label>
-          <input type="number" id="normalPriceInput" placeholder="Enter normal price" required />
+        <label for="discountPriceInput">Discount Price:</label>
+        <input type="number" id="discountPriceInput" placeholder="Enter discount price" required />
 
-          <label for="discountPriceInput">Discount Price:</label>
-          <input type="number" id="discountPriceInput" placeholder="Enter discount price" required />
-
-          <button type="submit">Update Prices</button>
-        </form>
-      </div>
-
-      <!-- Right Side -->
-      <div class="right-container">
-        <button class="print-btn" onclick="printPriceCards()">Print Price Cards</button>
-        <div class="price-card-container" id="priceCardContainer"></div>
-      </div>
+        <button type="submit">Update Prices</button>
+      </form>
     </div>
-  </body>
 
+    <!-- Right Side -->
+    <div class="right-container">
+      <button class="print-btn" onclick="printPriceCards()">Print Price Cards</button>
+      <div class="price-card-container" id="priceCardContainer"></div>
+    </div>
+  </div>
 
   <script>
     function formatPrice(price) {
-      // Format the number to include commas and ".-"
       return Number(price).toLocaleString("en-US") + ".-";
     }
 
     const form = document.getElementById("priceForm");
     const priceCardContainer = document.getElementById("priceCardContainer");
+    let cardCount = 0;
 
     form.addEventListener("submit", (e) => {
       e.preventDefault(); // Prevent page reload
 
-      const normalPriceInput =
-        document.getElementById("normalPriceInput").value;
-      const discountPriceInput =
-        document.getElementById("discountPriceInput").value;
+      if (cardCount >= 18) {
+        alert("ป้ายราคาเต็มหน้ากระดาษแล้ว"); // Alert if more than 18 cards are added
+        return;
+      }
+
+      const normalPriceInput = document.getElementById("normalPriceInput").value;
+      const discountPriceInput = document.getElementById("discountPriceInput").value;
 
       // Create a new price card
       const priceCard = document.createElement("div");
       priceCard.className = "price-card";
 
+      cardCount++; // Increment card count
+
       priceCard.innerHTML = `
-          <img src="awdawdcawd.jpg" alt="Product Image" />
-          <div class="text-overlay">${formatPrice(normalPriceInput)}</div>
-          <div class="text-overlaydow">${formatPrice(discountPriceInput)}</div>
-        `;
+        <img src="awdawdcawd.jpg" alt="Product Image" />
+        <div class="text-overlay">${formatPrice(normalPriceInput)}</div>
+        <div class="text-overlaydow">${formatPrice(discountPriceInput)}</div>
+        <div class="card-number">#${cardCount}</div> <!-- Show card number -->
+      `;
 
       // Append the new price card to the container
       priceCardContainer.appendChild(priceCard);
@@ -200,10 +203,9 @@
     });
 
     function printPriceCards() {
-      const printContents = document.getElementById("priceCardContainer").outerHTML; // ดึงข้อมูล HTML ทั้งหมดของ price-card-container
+      const printContents = document.getElementById("priceCardContainer").outerHTML;
       const originalContents = document.body.innerHTML;
 
-      // Replace the content with the specific part for printing
       document.body.innerHTML = `
       <html>
         <head>
@@ -217,8 +219,8 @@
               }
               .price-card-container {
                 display: grid;
-                grid-template-columns: repeat(3, 6cm); /* แสดง 3 การ์ดต่อ 1 แถว */
-                gap: 0.5cm; /* เพิ่มช่องว่างระหว่างการ์ด */
+                grid-template-columns: repeat(3, 6cm);
+                gap: 0.5cm;
                 position: absolute;
                 top: 0;
                 left: 0;
@@ -264,15 +266,13 @@
           </style>
         </head>
         <body>
-          ${printContents} <!-- ใช้ข้อมูล HTML ของ price-card-container ทั้งหมด -->
+          ${printContents}
         </body>
       </html>
     `;
 
-      window.print(); // Open print dialog
-      document.body.innerHTML = originalContents; // Restore original content
-      //location.reload();
-      // Reload to restore event listeners
+      window.print();
+      document.body.innerHTML = originalContents;
     }
   </script>
 </body>
