@@ -87,10 +87,23 @@
     .price-card-container {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
+      /* แสดงการ์ดใน 3 คอลัมน์ */
       gap: 16px;
       width: 100%;
-      margin-top: 20px;
+      max-height: 400px;
+      /* กำหนดความสูงสูงสุด */
+      overflow-y: auto;
+      /* เปิดการเลื่อนแนวตั้ง */
+      padding: 10px;
+      /* เพิ่ม padding ด้านใน */
+      background: #f8f9fa;
+      /* เพิ่มพื้นหลังเพื่อแยกส่วน */
+      border: 1px solid #ddd;
+      /* เส้นขอบเพื่อความชัดเจน */
+      border-radius: 5px;
+      /* มุมโค้งมน */
     }
+
 
     .price-card {
       overflow: hidden;
